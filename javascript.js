@@ -2,6 +2,7 @@
 const screen = document.getElementById("screen");
 let current = "";
 let previous = "";
+let result = "";
 let operator = null;
 
 function pressNumber(num) {
@@ -14,6 +15,7 @@ function pressNumber(num) {
 
 function pressOperator(op) {
     if(previous !== "" && current !==""){
+       
         const a = Number(previous);
         const b = Number(current);
 
@@ -24,7 +26,7 @@ function pressOperator(op) {
         current="";
 
         screen.innerHTML = previous + operator;
-
+        
     }
     else if (previous !== ""){
         operator = op;
@@ -36,8 +38,13 @@ function pressOperator(op) {
         current = "";
         screen.innerHTML = previous.concat(operator);
     }
+    else if(result !== ""){
+        previous = result.toString();
+        operator = op;
+        result = "";
+        screen.innerHTML = previous.concat(operator);
+    }
 }
-
 
 var numbers = document.getElementsByClassName("number");
 
@@ -63,8 +70,8 @@ equals.onclick = function(){
     const a = Number(previous);
     const b = Number(current);
     result = operate(a, b, operator);
-    current = result.toString();
-    screen.innerHTML = current;
+    screen.innerHTML = result.toString();
+    current = "";
     previous = "";
     operator = null;
 }
@@ -78,7 +85,14 @@ clear.onclick = function(){
     screen.innerHTML = current;
 }
 
+const decimal = document.getElementById("dot");
 
+decimal.onclick = function(){
+   if (!current.includes(".")) {
+        current += ".";
+        screen.innerHTML = previous + (operator || "") + current;
+    }
+}
 
 function operate(num1,num2,op) {
 
